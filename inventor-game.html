@@ -1,0 +1,1105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inventor Workshop (3rd Grade Game)</title>
+  <style>
+    :root{
+      --bg1:#c7d2fe;
+      --bg2:#a7f3d0;
+      --bg3:#fde68a;
+      --bg4:#fbcfe8;
+
+      --ink:#102a43;
+      --muted:#334e68;
+
+      --card:#ffffff;
+      --line:#e6e6ef;
+
+      --purple:#7c3aed;
+      --blue:#2563eb;
+      --green:#16a34a;
+      --orange:#f59e0b;
+      --pink:#db2777;
+
+      --shadow: 0 12px 28px rgba(16,42,67,.14);
+      --round: 22px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: "Trebuchet MS","Comic Sans MS","Verdana",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 500px at 15% 0%, rgba(199,210,254,.95), transparent 60%),
+        radial-gradient(900px 450px at 95% 10%, rgba(167,243,208,.8), transparent 55%),
+        radial-gradient(900px 450px at 40% 100%, rgba(253,230,138,.7), transparent 55%),
+        #f7fbff;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(10px);
+      border-bottom: 3px solid rgba(124,58,237,.15);
+    }
+    .wrap{
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      min-width: 260px;
+    }
+    .logo{
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      display:grid;
+      place-items:center;
+      box-shadow: 0 12px 20px rgba(37,99,235,.20);
+      color:#fff;
+      font-size: 28px;
+      font-weight: 900;
+      user-select:none;
+    }
+    .title{
+      margin:0;
+      font-size: 24px;
+      letter-spacing: .2px;
+    }
+    .subtitle{
+      margin:2px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .miniBadges{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 2px solid rgba(16,42,67,.10);
+      background: #fff;
+      box-shadow: 0 4px 0 rgba(16,42,67,.06);
+      font-size: 14px;
+      font-weight: 900;
+      user-select:none;
+      white-space:nowrap;
+    }
+
+    main{
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px;
+      display:grid;
+      gap: 14px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 980px){
+      main{ grid-template-columns: 1.25fr .75fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border: 3px solid rgba(16,42,67,.10);
+      border-radius: var(--round);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sectionHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .small{
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    /* Step stickers */
+    .steps{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+    .step{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 3px solid rgba(16,42,67,.10);
+      background: #fff;
+      font-size: 14px;
+      font-weight: 1000;
+      user-select:none;
+      box-shadow: 0 4px 0 rgba(16,42,67,.06);
+    }
+    .step.active{
+      border-color: rgba(124,58,237,.35);
+      background: rgba(124,58,237,.10);
+    }
+
+    .divider{
+      height: 2px;
+      background: rgba(16,42,67,.10);
+      margin: 12px 0;
+      border-radius: 99px;
+    }
+
+    label{
+      display:block;
+      margin: 12px 0 7px;
+      font-size: 16px;
+      font-weight: 1000;
+      letter-spacing: .2px;
+    }
+    input, textarea, select{
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 3px solid rgba(16,42,67,.12);
+      font-size: 18px;
+      font-weight: 700;
+      outline:none;
+    }
+    textarea{ min-height: 96px; resize: vertical; }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 6px rgba(37,99,235,.14);
+    }
+
+    .row{
+      display:grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 680px){
+      .row{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .buttons{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    button{
+      border: 0;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 18px;
+      font-weight: 1000;
+      cursor:pointer;
+      box-shadow: 0 6px 0 rgba(16,42,67,.16);
+      transition: transform .05s ease, filter .12s ease;
+      user-select:none;
+      position: relative; /* for sparkle targeting */
+      overflow: hidden;   /* keeps sparkles neat */
+    }
+    button:active{ transform: translateY(2px); box-shadow: 0 4px 0 rgba(16,42,67,.16); }
+
+    .primary{
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color:#fff;
+    }
+    .ghost{
+      background: rgba(37,99,235,.10);
+      border: 3px solid rgba(37,99,235,.25);
+      color:#0b2a5b;
+    }
+    .fun{
+      background: rgba(245,158,11,.18);
+      border: 3px solid rgba(245,158,11,.35);
+      color:#7a3d00;
+    }
+    .danger{
+      background: rgba(220,38,38,.14);
+      border: 3px solid rgba(220,38,38,.28);
+      color:#7f1d1d;
+    }
+
+    /* Game boxes */
+    .gameBox{
+      border-radius: 22px;
+      border: 3px dashed rgba(124,58,237,.35);
+      background:
+        radial-gradient(700px 250px at 20% 0%, rgba(199,210,254,.7), transparent 60%),
+        radial-gradient(700px 250px at 90% 20%, rgba(251,207,232,.55), transparent 60%),
+        #fff;
+      padding: 14px;
+      position: relative;
+    }
+    .bigTitle{
+      margin: 0;
+      font-size: 30px;
+      font-weight: 1100;
+      letter-spacing: .2px;
+    }
+    .badgeBox{
+      border-radius: 22px;
+      border: 3px dashed rgba(22,163,74,.35);
+      background:
+        radial-gradient(700px 250px at 20% 0%, rgba(167,243,208,.65), transparent 60%),
+        radial-gradient(700px 250px at 90% 20%, rgba(253,230,138,.55), transparent 60%),
+        #fff;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .badge{ font-size: 44px; }
+
+    /* Spinner */
+    .spinnerRow{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top: 12px;
+    }
+    .spinner{
+      width: 92px;
+      height: 92px;
+      border-radius: 22px;
+      border: 3px solid rgba(16,42,67,.12);
+      background: conic-gradient(from 0deg,
+        rgba(124,58,237,.85),
+        rgba(37,99,235,.85),
+        rgba(22,163,74,.80),
+        rgba(245,158,11,.85),
+        rgba(219,39,119,.78),
+        rgba(124,58,237,.85)
+      );
+      box-shadow: 0 10px 20px rgba(16,42,67,.10);
+      position: relative;
+      user-select:none;
+    }
+    .spinner::after{
+      content:"";
+      position:absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 18px solid #102a43;
+      filter: drop-shadow(0 2px 0 rgba(255,255,255,.35));
+    }
+    .spinAnim{
+      animation: spin 800ms cubic-bezier(.2,.9,.2,1) forwards;
+    }
+    @keyframes spin{
+      to { transform: rotate(860deg); }
+    }
+
+    /* Saved panel */
+    .list{ display:grid; gap: 10px; }
+    .idea{
+      border: 3px solid rgba(16,42,67,.10);
+      border-radius: 18px;
+      background: #fff;
+      padding: 12px;
+      box-shadow: 0 4px 0 rgba(16,42,67,.06);
+    }
+    .idea h3{
+      margin: 0 0 6px;
+      font-size: 16px;
+      font-weight: 1100;
+    }
+    .meta{
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 2px solid rgba(16,42,67,.12);
+      background:#fff;
+    }
+
+    /* ---------- SPARKLES (animation) ---------- */
+    .sparkleLayer{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+    .sparkle{
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      transform: translate(-50%, -50%) scale(0.9);
+      opacity: 0;
+      animation: pop 700ms ease-out forwards;
+      filter: drop-shadow(0 3px 0 rgba(16,42,67,.15));
+    }
+    .sparkle::before{
+      content:"✨";
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      font-size: 18px;
+    }
+    @keyframes pop{
+      0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(0deg); }
+      20%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2) rotate(220deg); }
+    }
+
+    /* Badge shimmer */
+    .shine{
+      position:absolute;
+      inset: -40% -40%;
+      background: linear-gradient(115deg,
+        transparent 35%,
+        rgba(255,255,255,.65) 45%,
+        transparent 55%
+      );
+      transform: translateX(-60%) rotate(10deg);
+      animation: shine 1200ms ease-out forwards;
+      pointer-events:none;
+    }
+    @keyframes shine{
+      to { transform: translateX(60%) rotate(10deg); opacity: 0; }
+    }
+
+    /* Tiny sparkle for buttons (uses same sparkle but local) */
+    .btnSpark{
+      position:absolute;
+      left: var(--x);
+      top: var(--y);
+      width: 10px;
+      height: 10px;
+      transform: translate(-50%, -50%);
+      pointer-events:none;
+      animation: btnPop 450ms ease-out forwards;
+      opacity: 0;
+    }
+    .btnSpark::before{ content:"✨"; font-size: 16px; }
+    @keyframes btnPop{
+      0% { opacity: 0; transform: translate(-50%,-50%) scale(.5); }
+      30%{ opacity: 1; }
+      100%{ opacity: 0; transform: translate(-50%,-120%) scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">🛠️</div>
+      <div>
+        <h1 class="title">Inventor Workshop</h1>
+        <p class="subtitle">A third-grade invention game</p>
+      </div>
+    </div>
+    <div class="miniBadges">
+      <span class="pill">🔊 Sound On</span>
+      <span class="pill">⭐ Sparkles</span>
+      <span class="pill">💡 Create</span>
+      <span class="pill">🏅 Badge</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- LEFT: GAME -->
+  <section class="card">
+    <div class="sectionHead">
+      <h2>Game Screen</h2>
+      <div class="small" id="stepLabel">Start Screen</div>
+    </div>
+
+    <div class="steps" id="steps">
+      <span class="step active" data-step="0">Start</span>
+      <span class="step" data-step="1">Problem</span>
+      <span class="step" data-step="2">Brainstorm</span>
+      <span class="step" data-step="3">Choose</span>
+      <span class="step" data-step="4">Build</span>
+      <span class="step" data-step="5">Improve</span>
+      <span class="step" data-step="6">Badge</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- START -->
+    <div id="screen0">
+      <div class="gameBox">
+        <p class="small" style="margin:0 0 8px;">🎮 Welcome, Inventors!</p>
+        <h3 class="bigTitle">Press START to play!</h3>
+        <p class="small" style="margin:8px 0 0;">
+          You will: pick a problem ➜ invent a solution ➜ improve it ➜ earn a badge!
+        </p>
+
+        <div class="spinnerRow">
+          <div class="spinner" id="spinner" aria-hidden="true"></div>
+          <div style="flex:1; min-width: 220px;">
+            <div class="small" style="margin-bottom:6px;"><b>Spin for a problem idea:</b></div>
+            <div class="card" style="border-radius:18px; box-shadow:none; border:3px solid rgba(16,42,67,.10);">
+              <div style="font-size:18px; font-weight:1000;" id="promptLine">Click SPIN!</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button class="fun" id="spinBtn">🎡 SPIN</button>
+          <button class="primary" id="startBtn">▶ START</button>
+        </div>
+
+        <p class="small" style="margin-top:10px;">Teacher tip: Students can save inventions and view them on the right.</p>
+      </div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div id="screen1" style="display:none;">
+      <div class="gameBox">
+        <h3 class="bigTitle">Step 1: What’s the problem?</h3>
+        <p class="small" style="margin:6px 0 0;">Pick a real-life problem at school or home.</p>
+
+        <label for="studentName">Your name</label>
+        <input id="studentName" placeholder="Type your name" maxlength="30"/>
+
+        <label for="problem">My problem is…</label>
+        <textarea id="problem" placeholder="Example: My pencil keeps rolling off my desk."></textarea>
+
+        <div class="buttons">
+          <button class="fun" id="usePromptBtn">✨ Use the prompt I spun</button>
+          <button class="ghost" id="back0">← Back</button>
+          <button class="primary" id="to2">Next ➜</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="screen2" style="display:none;">
+      <div class="gameBox">
+        <h3 class="bigTitle">Step 2: Brainstorm 3 inventions!</h3>
+        <p class="small" style="margin:6px 0 0;">Silly ideas are allowed. Sometimes they become the best ideas!</p>
+
+        <label for="idea1">Idea 1</label>
+        <input id="idea1" placeholder="A tool that…" maxlength="90"/>
+
+        <label for="idea2">Idea 2</label>
+        <input id="idea2" placeholder="What if…" maxlength="90"/>
+
+        <label for="idea3">Idea 3</label>
+        <input id="idea3" placeholder="Maybe it could…" maxlength="90"/>
+
+        <div class="buttons">
+          <button class="fun" id="ideaFillBtn">🎲 Fill with idea starters</button>
+          <button class="ghost" id="back1">← Back</button>
+          <button class="primary" id="to3">Next ➜</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="screen3" style="display:none;">
+      <div class="gameBox">
+        <h3 class="bigTitle">Step 3: Choose your best idea</h3>
+
+        <label for="bestIdea">I choose…</label>
+        <select id="bestIdea" style="font-size:18px; font-weight:900;">
+          <option value="1">Idea 1</option>
+          <option value="2">Idea 2</option>
+          <option value="3">Idea 3</option>
+        </select>
+
+        <label for="whyBest">Why is it the best?</label>
+        <textarea id="whyBest" placeholder="Because…" ></textarea>
+
+        <div class="buttons">
+          <button class="ghost" id="back2">← Back</button>
+          <button class="primary" id="to4">Next ➜</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div id="screen4" style="display:none;">
+      <div class="gameBox">
+        <h3 class="bigTitle">Step 4: Build plan</h3>
+        <p class="small" style="margin:6px 0 0;">Pick materials + write steps.</p>
+
+        <label>Materials</label>
+        <div class="row" style="margin-top:6px;">
+          <div>
+            <label><input type="checkbox" class="mat" value="Cardboard"> Cardboard</label>
+            <label><input type="checkbox" class="mat" value="Paper"> Paper</label>
+            <label><input type="checkbox" class="mat" value="Tape"> Tape</label>
+            <label><input type="checkbox" class="mat" value="Markers"> Markers</label>
+            <label><input type="checkbox" class="mat" value="Glue"> Glue</label>
+          </div>
+          <div>
+            <label><input type="checkbox" class="mat" value="Scissors"> Scissors</label>
+            <label><input type="checkbox" class="mat" value="Rubber bands"> Rubber bands</label>
+            <label><input type="checkbox" class="mat" value="String"> String</label>
+            <label><input type="checkbox" class="mat" value="Craft sticks"> Craft sticks</label>
+            <label><input type="checkbox" class="mat" value="Other"> Other</label>
+          </div>
+        </div>
+
+        <label for="howBuild">My build steps</label>
+        <textarea id="howBuild" placeholder="1) …&#10;2) …&#10;3) …"></textarea>
+
+        <label for="testPlan">How will you test it?</label>
+        <input id="testPlan" placeholder="I will test it by…" maxlength="140"/>
+
+        <div class="buttons">
+          <button class="ghost" id="back3">← Back</button>
+          <button class="primary" id="to5">Next ➜</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div id="screen5" style="display:none;">
+      <div class="gameBox">
+        <h3 class="bigTitle">Step 5: Improve it!</h3>
+        <p class="small" style="margin:6px 0 0;">Testing helps you make it better.</p>
+
+        <label for="whatHappened">What happened when you tested?</label>
+        <textarea id="whatHappened" placeholder="It worked when… but…"></textarea>
+
+        <label for="change1">One change I will make</label>
+        <input id="change1" placeholder="Next time, I will…" maxlength="140"/>
+
+        <label for="tryAgain">What will you try next?</label>
+        <input id="tryAgain" placeholder="I will try…" maxlength="140"/>
+
+        <div class="buttons">
+          <button class="ghost" id="back4">← Back</button>
+          <button class="primary" id="to6">Finish ➜ Badge!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div id="screen6" style="display:none;">
+      <div class="badgeBox" id="badgeBox">
+        <div class="badge">🏅</div>
+        <h3 class="bigTitle" style="margin-top:8px;">You earned an Inventor Badge!</h3>
+        <p class="small" id="badgeLine" style="margin:6px 0 0;"></p>
+        <div class="divider"></div>
+        <div style="font-size:18px; font-weight:900; line-height:1.35;" id="summaryLine"></div>
+
+        <div class="buttons">
+          <button class="primary" id="saveIdea">💾 Save my invention</button>
+          <button class="ghost" id="newOne">➕ New invention</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- RIGHT: SAVED -->
+  <aside class="card">
+    <div class="sectionHead">
+      <h2>Saved Inventions</h2>
+      <div class="buttons" style="margin-top:0;">
+        <button class="ghost" id="exportBtn">Export (Copy)</button>
+        <button class="danger" id="clearBtn">Clear All</button>
+      </div>
+    </div>
+
+    <p class="small">Saved on this computer. Click one to view details.</p>
+
+    <div class="divider"></div>
+    <div class="list" id="savedList"></div>
+
+    <div class="divider"></div>
+    <div id="details" class="small">
+      <strong>Details:</strong>
+      <p>Pick a saved invention to see it here.</p>
+      <p class="small">Tip: <span class="kbd">Cmd</span> + <span class="kbd">F</span> to find a name.</p>
+    </div>
+  </aside>
+
+</main>
+
+<div class="sparkleLayer" id="sparkleLayer"></div>
+
+<script>
+  console.log("Inventor Workshop loaded ✅");
+
+  const $ = (id) => document.getElementById(id);
+  const stepsEl = $("steps");
+  const screens = [0,1,2,3,4,5,6].map(n => $("screen"+n));
+  const stepLabel = $("stepLabel");
+  const sparkleLayer = $("sparkleLayer");
+
+  const STORAGE_KEY = "inventor_workshop_saved_color_sparkle_v1";
+
+  const prompts = [
+    "My pencil keeps rolling off my desk.",
+    "My papers get crumpled in my backpack.",
+    "My water bottle tips over too easily.",
+    "I always lose my eraser during writing.",
+    "My headphones get tangled.",
+    "It takes too long to clean up game pieces.",
+    "My shoelaces come untied at recess.",
+    "My markers dry out because caps fall off.",
+    "I can’t find the right folder for homework.",
+    "My lunchbox pops open in my backpack."
+  ];
+
+  const ideaTemplates = [
+    "A holder that keeps things from rolling.",
+    "A clip that attaches to something to keep it in place.",
+    "A pocket or pouch that organizes small things.",
+    "A strap that keeps items together.",
+    "A cover that protects something.",
+    "A label system that helps you find things faster."
+  ];
+
+  let lastSpunPrompt = "";
+
+  // -----------------------------
+  // SOUND (Web Audio — no files)
+  // -----------------------------
+  let audioCtx = null;
+
+  function getAudio(){
+    if (!audioCtx){
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioCtx;
+  }
+
+  function unlockAudio(){
+    // Some browsers require a user gesture before sound plays.
+    const ctx = getAudio();
+    if (ctx.state === "suspended") ctx.resume();
+  }
+
+  function beep({freq=440, duration=0.07, type="sine", gain=0.05} = {}){
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+
+    g.gain.value = 0;
+    osc.connect(g);
+    g.connect(ctx.destination);
+
+    const now = ctx.currentTime;
+    // quick attack/decay so it sounds "game-y"
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(gain, now + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+    osc.start(now);
+    osc.stop(now + duration + 0.02);
+  }
+
+  function clickSound(){
+    beep({freq: 620, duration: 0.05, type:"square", gain:0.03});
+  }
+
+  function spinSound(){
+    // little "woop" feeling
+    beep({freq: 300, duration: 0.06, type:"sawtooth", gain:0.03});
+    setTimeout(()=>beep({freq: 420, duration: 0.06, type:"sawtooth", gain:0.03}), 70);
+    setTimeout(()=>beep({freq: 540, duration: 0.06, type:"sawtooth", gain:0.03}), 140);
+  }
+
+  function successSound(){
+    // a tiny success chord
+    beep({freq: 523.25, duration: 0.10, type:"triangle", gain:0.05}); // C5
+    setTimeout(()=>beep({freq: 659.25, duration: 0.10, type:"triangle", gain:0.05}), 80); // E5
+    setTimeout(()=>beep({freq: 783.99, duration: 0.12, type:"triangle", gain:0.05}), 160); // G5
+  }
+
+  function sparkleSound(){
+    beep({freq: 880, duration: 0.05, type:"sine", gain:0.04});
+    setTimeout(()=>beep({freq: 988, duration: 0.06, type:"sine", gain:0.04}), 55);
+  }
+
+  // -----------------------------
+  // SPARKLES (animations)
+  // -----------------------------
+  function burstSparkles(x, y, count=14){
+    for (let i=0; i<count; i++){
+      const s = document.createElement("div");
+      s.className = "sparkle";
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 30 + Math.random() * 90;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+
+      s.style.left = x + "px";
+      s.style.top  = y + "px";
+      s.style.setProperty("--dx", dx + "px");
+      s.style.setProperty("--dy", dy + "px");
+      s.style.animationDuration = (520 + Math.random()*380) + "ms";
+
+      sparkleLayer.appendChild(s);
+      setTimeout(()=> s.remove(), 900);
+    }
+  }
+
+  function sparkleButton(btn){
+    const r = btn.getBoundingClientRect();
+    // sparkle from center top-ish
+    const x = r.left + r.width * (0.35 + Math.random()*0.3);
+    const y = r.top  + r.height * (0.25 + Math.random()*0.35);
+    burstSparkles(x, y, 8);
+    sparkleSound();
+  }
+
+  function addButtonSparkleOnClick(btn){
+    btn.addEventListener("click", (e)=>{
+      // small sparkle inside the button
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const el = document.createElement("span");
+      el.className = "btnSpark";
+      el.style.setProperty("--x", x + "px");
+      el.style.setProperty("--y", y + "px");
+      btn.appendChild(el);
+      setTimeout(()=> el.remove(), 480);
+    });
+  }
+
+  function badgeShine(){
+    const box = $("badgeBox");
+    const shine = document.createElement("div");
+    shine.className = "shine";
+    box.appendChild(shine);
+    setTimeout(()=> shine.remove(), 1400);
+  }
+
+  // -----------------------------
+  // Game flow
+  // -----------------------------
+  function setStep(n){
+    screens.forEach((el,i)=> el.style.display = (i===n) ? "block" : "none");
+    [...stepsEl.querySelectorAll(".step")].forEach(s=>{
+      s.classList.toggle("active", Number(s.dataset.step)===n);
+    });
+
+    const names = ["Start Screen","Step 1: Problem","Step 2: Brainstorm","Step 3: Choose","Step 4: Build","Step 5: Improve","Step 6: Badge"];
+    stepLabel.textContent = names[n] || "Game";
+    window.scrollTo({ top:0, behavior:"smooth" });
+  }
+
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function escapeHtml(str){
+    return (str||"").replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  function loadSaved(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch { return []; }
+  }
+  function saveSaved(list){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  function validateStep1(){
+    if (!$("studentName").value.trim()) return "Please type your name.";
+    if (!$("problem").value.trim()) return "Please type your problem.";
+    return "";
+  }
+  function validateStep2(){
+    if (!$("idea1").value.trim() || !$("idea2").value.trim() || !$("idea3").value.trim()){
+      return "Please write 3 ideas (you can use the 🎲 button!).";
+    }
+    return "";
+  }
+
+  function currentDraft(){
+    const best = $("bestIdea").value;
+    const ideas = {
+      1: $("idea1").value.trim(),
+      2: $("idea2").value.trim(),
+      3: $("idea3").value.trim()
+    };
+    const materials = [...document.querySelectorAll(".mat:checked")].map(x=>x.value);
+
+    return {
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      studentName: $("studentName").value.trim(),
+      problem: $("problem").value.trim(),
+      ideas,
+      bestIdeaNumber: best,
+      bestIdeaText: ideas[best] || "",
+      whyBest: $("whyBest").value.trim(),
+      materials,
+      howBuild: $("howBuild").value.trim(),
+      testPlan: $("testPlan").value.trim(),
+      whatHappened: $("whatHappened").value.trim(),
+      change1: $("change1").value.trim(),
+      tryAgain: $("tryAgain").value.trim()
+    };
+  }
+
+  function renderBadge(){
+    const d = currentDraft();
+    $("badgeLine").textContent = `${d.studentName} • ${new Date().toLocaleDateString()}`;
+    $("summaryLine").innerHTML =
+      `⭐ <b>Problem:</b> ${escapeHtml(d.problem)}<br>
+       💡 <b>Invention:</b> ${escapeHtml(d.bestIdeaText || "(choose an idea)")}<br>
+       🔧 <b>Improvement:</b> ${escapeHtml(d.change1 || "One small change!")}`;
+  }
+
+  function refreshSavedList(){
+    const list = loadSaved().sort((a,b)=> b.createdAt.localeCompare(a.createdAt));
+    const container = $("savedList");
+    container.innerHTML = "";
+    if (!list.length){
+      container.innerHTML = `<p class="small">No saved inventions yet. Finish the game and click “Save my invention.”</p>`;
+      return;
+    }
+    list.forEach(item=>{
+      const div = document.createElement("div");
+      div.className = "idea";
+      div.innerHTML = `
+        <h3>${escapeHtml(item.studentName)} — ${escapeHtml(item.bestIdeaText || "Invention")}</h3>
+        <p class="meta">${new Date(item.createdAt).toLocaleString()}</p>
+        <p class="small"><b>Problem:</b> ${escapeHtml(item.problem)}</p>
+        <div class="buttons" style="margin-top:10px;">
+          <button class="ghost" data-view="${item.id}">View</button>
+          <button class="danger" data-del="${item.id}">Delete</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+    container.querySelectorAll("[data-view]").forEach(btn=>{
+      btn.addEventListener("click", ()=> { clickSound(); showDetails(btn.dataset.view); });
+      addButtonSparkleOnClick(btn);
+    });
+    container.querySelectorAll("[data-del]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        clickSound();
+        const id = btn.dataset.del;
+        saveSaved(loadSaved().filter(x=>x.id!==id));
+        refreshSavedList();
+        $("details").innerHTML = `<strong>Details:</strong><p>Deleted.</p>`;
+      });
+      addButtonSparkleOnClick(btn);
+    });
+  }
+
+  function showDetails(id){
+    const item = loadSaved().find(x=>x.id===id);
+    if (!item) return;
+    $("details").innerHTML = `
+      <strong>Details:</strong>
+      <p><b>Name:</b> ${escapeHtml(item.studentName)}</p>
+      <p><b>Problem:</b> ${escapeHtml(item.problem)}</p>
+      <p><b>Brainstorm:</b><br>
+        1) ${escapeHtml(item.ideas?.[1] || "")}<br>
+        2) ${escapeHtml(item.ideas?.[2] || "")}<br>
+        3) ${escapeHtml(item.ideas?.[3] || "")}
+      </p>
+      <p><b>Chosen invention:</b> ${escapeHtml(item.bestIdeaText)}<br>
+      <b>Why:</b> ${escapeHtml(item.whyBest)}</p>
+      <p><b>Materials:</b> ${escapeHtml((item.materials||[]).join(", "))}</p>
+      <p><b>Build steps:</b><br>${escapeHtml(item.howBuild).replace(/\n/g,"<br>")}</p>
+      <p><b>Test plan:</b> ${escapeHtml(item.testPlan)}</p>
+      <p><b>Improvement:</b> ${escapeHtml(item.change1)}<br>
+      <b>Next time:</b> ${escapeHtml(item.tryAgain)}</p>
+    `;
+  }
+
+  // -----------------------------
+  // Buttons + sound + sparkles
+  // -----------------------------
+  const allButtons = () => Array.from(document.querySelectorAll("button"));
+  function addGlobalButtonFX(){
+    allButtons().forEach(btn=>{
+      addButtonSparkleOnClick(btn);
+      btn.addEventListener("click", ()=>{
+        unlockAudio();
+        // click sound for all buttons, except SPIN/BADGE which have special sounds
+        if (btn.id !== "spinBtn" && btn.id !== "to6") clickSound();
+      });
+    });
+  }
+
+  // Start + navigation
+  $("startBtn").addEventListener("click", (e)=> {
+    unlockAudio();
+    sparkleButton(e.currentTarget);
+    setStep(1);
+  });
+
+  $("back0").addEventListener("click", ()=> setStep(0));
+
+  $("to2").addEventListener("click", ()=>{
+    const err = validateStep1();
+    if (err) return alert(err);
+    setStep(2);
+  });
+  $("back1").addEventListener("click", ()=> setStep(1));
+
+  $("to3").addEventListener("click", ()=>{
+    const err = validateStep2();
+    if (err) return alert(err);
+    setStep(3);
+  });
+  $("back2").addEventListener("click", ()=> setStep(2));
+
+  $("to4").addEventListener("click", ()=> setStep(4));
+  $("back3").addEventListener("click", ()=> setStep(3));
+
+  $("to5").addEventListener("click", ()=> setStep(5));
+  $("back4").addEventListener("click", ()=> setStep(4));
+
+  $("to6").addEventListener("click", (e)=>{
+    // special: success
+    renderBadge();
+    setStep(6);
+
+    const box = $("badgeBox").getBoundingClientRect();
+    const cx = box.left + box.width/2;
+    const cy = box.top + box.height*0.3;
+
+    successSound();
+    burstSparkles(cx, cy, 26);
+    badgeShine();
+  });
+
+  // Spinner / prompts
+  $("spinBtn").addEventListener("click", (e)=>{
+    unlockAudio();
+    spinSound();
+    sparkleButton(e.currentTarget);
+
+    const spin = $("spinner");
+    spin.classList.remove("spinAnim");
+    void spin.offsetWidth; // restart
+    spin.classList.add("spinAnim");
+
+    lastSpunPrompt = pick(prompts);
+    $("promptLine").textContent = "✨ " + lastSpunPrompt;
+  });
+
+  $("usePromptBtn").addEventListener("click", (e)=>{
+    if (!lastSpunPrompt){
+      alert("Click SPIN first!");
+      return;
+    }
+    sparkleButton(e.currentTarget);
+    $("problem").value = lastSpunPrompt;
+  });
+
+  // Idea helper
+  $("ideaFillBtn").addEventListener("click", (e)=>{
+    sparkleButton(e.currentTarget);
+    const base = $("problem").value.trim() ? `For this problem: "${$("problem").value.trim()}"` : "For your problem:";
+    $("idea1").value = pick(ideaTemplates);
+    $("idea2").value = base + " make something that helps.";
+    $("idea3").value = "A silly idea: " + pick([
+      "a 'Pencil Parking Lot' with tiny stop signs!",
+      "a 'No-Spill Shield' for your water bottle!",
+      "a 'Tangle Tunnel' that keeps cords in a spiral!",
+      "a 'Folder Finder' with bright tabs!"
+    ]);
+  });
+
+  // Save / export
+  $("saveIdea").addEventListener("click", (e)=>{
+    const d = currentDraft();
+    if (!d.studentName || !d.problem || !d.bestIdeaText){
+      return alert("Make sure you have a name, a problem, and a chosen invention.");
+    }
+    const saved = loadSaved();
+    saved.push(d);
+    saveSaved(saved);
+    refreshSavedList();
+
+    const r = e.currentTarget.getBoundingClientRect();
+    burstSparkles(r.left + r.width/2, r.top + r.height/2, 16);
+    successSound();
+    alert("Saved! 🎉");
+  });
+
+  $("newOne").addEventListener("click", (e)=>{
+    sparkleButton(e.currentTarget);
+    ["studentName","problem","idea1","idea2","idea3","whyBest","howBuild","testPlan","whatHappened","change1","tryAgain"]
+      .forEach(id=> $(id).value="");
+    $("bestIdea").selectedIndex = 0;
+    document.querySelectorAll(".mat").forEach(c=> c.checked=false);
+    $("details").innerHTML = `<strong>Details:</strong><p>Pick a saved invention to see it here.</p>`;
+    setStep(0);
+  });
+
+  $("clearBtn").addEventListener("click", ()=>{
+    if (confirm("Clear ALL saved inventions on this computer?")){
+      saveSaved([]);
+      refreshSavedList();
+      $("details").innerHTML = `<strong>Details:</strong><p>Cleared.</p>`;
+    }
+  });
+
+  $("exportBtn").addEventListener("click", async (e)=>{
+    sparkleButton(e.currentTarget);
+    const text = JSON.stringify(loadSaved(), null, 2);
+    try { await navigator.clipboard.writeText(text); successSound(); alert("Copied! Paste into a doc/email."); }
+    catch { prompt("Copy this text:", text); }
+  });
+
+  // Click-to-sparkle anywhere on the badge box for fun
+  $("badgeBox").addEventListener("click", (e)=>{
+    const rect = e.currentTarget.getBoundingClientRect();
+    burstSparkles(e.clientX, e.clientY, 14);
+    sparkleSound();
+  });
+
+  // Init
+  refreshSavedList();
+  setStep(0);
+  addGlobalButtonFX();
+</script>
+
+</body>
+</html>
